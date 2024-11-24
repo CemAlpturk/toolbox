@@ -316,3 +316,87 @@ class FenwickTree:
             int: The op over the range.
         """
         return self.query(right) - self.query(left - 1)
+
+
+class ListNode:
+    """
+    A node in a singly linked list.
+    """
+
+    def __init__(self, value: Any):
+        self.value = value
+        self.next: ListNode | None = None
+
+
+class LinkedList:
+    """
+    A simple linked list.
+    """
+
+    def __init__(self):
+        self.head: ListNode | None = None
+
+    def insert(self, value: Any) -> None:
+        """
+        Inserts a new node with the given value at the beginning.
+
+        Args:
+            value (Any): The value to insert.
+        """
+        new_node = ListNode(value)
+        new_node.next = self.head
+        self.head = new_node
+
+    def delete(self, value: Any) -> bool:
+        """
+        Deletes the first node with the specified value.
+
+        Args:
+            value (Any): The value to delete.
+
+        Returns:
+            bool: True if deletion was successful, False otherwise.
+        """
+        prev = None
+        curr = self.head
+        while curr:
+            if curr.value == value:
+                if prev:
+                    prev.next = curr.next
+                else:
+                    self.head = curr.next
+                return True
+            prev = curr
+            curr = curr.next
+        return False
+
+    def find(self, value: Any) -> ListNode | None:
+        """
+        Finds the first node wit the specified value.
+
+        Args:
+            value (Any): The value to find.
+
+        Returns:
+            ListNode | None: The node if found, None otherwise.
+        """
+        curr = self.head
+        while curr:
+            if curr.value == value:
+                return curr
+            curr = curr.next
+        return None
+
+    def to_list(self) -> list[Any]:
+        """
+        Converts the linked list to a Python list.
+
+        Returns:
+            list[Any]: the list of node values.
+        """
+        result = []
+        curr = self.head
+        while curr:
+            result.append(curr.value)
+            curr = curr.next
+        return result

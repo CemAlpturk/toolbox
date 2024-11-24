@@ -6,6 +6,7 @@ from toolbox.data_structures import (
     Trie,
     SegmentTree,
     FenwickTree,
+    LinkedList,
 )
 
 
@@ -140,3 +141,29 @@ def test_fenwick_tree() -> None:
 
     # Query again after the update
     assert fenwick.query(3) == 15
+
+
+def test_linked_list_operations() -> None:
+    """Test LinkedList insert, delete, find, and to_list."""
+    ll = LinkedList()
+    ll.insert(3)
+    ll.insert(2)
+    ll.insert(1)
+
+    # The list should be [1, 2, 3]
+    assert ll.to_list() == [1, 2, 3]
+
+    # Delete a middle element
+    assert ll.delete(2)
+    assert ll.to_list() == [1, 3]
+
+    # Delete a non-existent element
+    assert not ll.delete(4)
+
+    # Find an element
+    node = ll.find(3)
+    assert node is not None and node.value == 3
+
+    # Find a non-existent element
+    node = ll.find(4)
+    assert node is None
