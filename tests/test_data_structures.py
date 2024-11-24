@@ -7,6 +7,7 @@ from toolbox.data_structures import (
     SegmentTree,
     FenwickTree,
     LinkedList,
+    Graph,
 )
 
 
@@ -167,3 +168,28 @@ def test_linked_list_operations() -> None:
     # Find a non-existent element
     node = ll.find(4)
     assert node is None
+
+
+def test_graph_adjacency_list() -> None:
+    """Test Graph operations using an adjacency list."""
+
+    graph = Graph()
+    graph.add_edge(1, 2)
+    graph.add_edge(2, 3)
+    graph.add_edge(1, 3, bidirectional=False)
+
+    expected_adj_list = {
+        1: [2, 3],
+        2: [1, 3],
+        3: [2],
+    }
+    assert graph.adj_list == expected_adj_list
+
+    expected_weights = {
+        (1, 2): 1.0,
+        (2, 1): 1.0,
+        (2, 3): 1.0,
+        (3, 2): 1.0,
+        (1, 3): 1.0,
+    }
+    assert graph.weights == expected_weights

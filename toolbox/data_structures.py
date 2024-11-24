@@ -400,3 +400,42 @@ class LinkedList:
             result.append(curr.value)
             curr = curr.next
         return result
+
+
+class Graph:
+    """
+    Graph representation using an adjacency list.
+    """
+
+    def __init__(self) -> None:
+        self.adj_list: dict[Any, list[Any]] = {}
+        self.weights: dict[tuple[Any, Any], float] = {}
+
+    def add_edge(
+        self,
+        u: Any,
+        v: Any,
+        w: float = 1.0,
+        bidirectional: bool = True,
+    ) -> None:
+        """
+        Adds an edge between nodes u and v.
+
+        Args:
+            u (Any): The starting node.
+            v (Any): The ending node.
+            w (float, optional): Edge weight. Defaults to 1.0.
+            bidirectional (bool, optional): If True, adds an edge in both directions. Defaults to True.
+        """
+        if u not in self.adj_list:
+            self.adj_list[u] = []
+        self.adj_list[u].append(v)
+
+        self.weights[(u, v)] = w
+
+        if bidirectional:
+            if v not in self.adj_list:
+                self.adj_list[v] = []
+            self.adj_list[v].append(u)
+
+            self.weights[(v, u)] = w
