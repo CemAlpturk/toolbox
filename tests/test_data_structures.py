@@ -5,6 +5,7 @@ from toolbox.data_structures import (
     PriorityQueue,
     Trie,
     SegmentTree,
+    FenwickTree,
 )
 
 
@@ -117,3 +118,25 @@ def test_segment_tree_min():
 
     # Query again after the update
     assert seg_tree.query(1, 5) == 0
+
+
+def test_fenwick_tree() -> None:
+    """Test FenwickTree for prefix sums and range queries."""
+    data = [1, 2, 3, 4, 5]
+    fenwick = FenwickTree(len(data))
+
+    # Buld the tree
+    for idx, val in enumerate(data):
+        fenwick.update(idx, val)
+
+    # Query prefix sum up to index 3
+    assert fenwick.query(3) == 10
+
+    # Range sum from index 1 to 3
+    assert fenwick.range_query(1, 3) == 9
+
+    # Update index 2 by adding 5
+    fenwick.update(2, 5)
+
+    # Query again after the update
+    assert fenwick.query(3) == 15

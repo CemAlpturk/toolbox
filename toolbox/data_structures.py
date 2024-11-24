@@ -263,3 +263,56 @@ class SegmentTree(Generic[T]):
             right >>= 1
 
         return result
+
+
+class FenwickTree:
+    """
+    Fenwick Tree (Binary Indexed Tree) implementation for prefix ops.
+    """
+
+    def __init__(self, size: int) -> None:
+        self.size = size
+        self.tree: list[int] = [0] * (size + 1)
+
+    def update(self, index: int, value: int) -> None:
+        """
+        Adds `value` to the element at `index`.
+
+        Args:
+            index (int): The index to update (0-based).
+            value (int): The value to add.
+        """
+        index += 1  # Convert to 1-based indexing
+        while index <= self.size:
+            self.tree[index] += value
+            index += index & -index
+
+    def query(self, index: int) -> int:
+        """
+        Computes the prefix sum up to and including `index`.
+
+        Args:
+            index (int): The index to query (0-based).
+
+        Returns:
+            int: The prefix op.
+        """
+        index += 1  # Convert to 1-based indexing
+        result = 0
+        while index > 0:
+            result += self.tree[index]
+            index -= index & -index
+        return result
+
+    def range_query(self, left: int, right: int) -> int:
+        """
+        Computes the range sum between `left` and `right` inclusive.
+
+        Args:
+            left (int): The starting index (0-based).
+            right (int): The ending index (1-based).
+
+        Returns:
+            int: The op over the range.
+        """
+        return self.query(right) - self.query(left - 1)
