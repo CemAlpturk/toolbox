@@ -3,6 +3,7 @@ import pytest
 from toolbox.data_structures import (
     UnionFind,
     PriorityQueue,
+    Trie,
 )
 
 
@@ -65,3 +66,23 @@ def test_priority_queue_max_heap() -> None:
         result.append(pq.pop())
 
     assert result == expected_order
+
+
+def test_trie_operations() -> None:
+    """Test Trie insert, search, and starts_with."""
+    trie = Trie()
+    words = ["apple", "app", "application"]
+
+    for word in words:
+        trie.insert(word)
+
+    # Test search
+    assert trie.search("app")
+    assert trie.search("apple")
+    assert trie.search("application")
+    assert not trie.search("apples")
+
+    # Test starts_with
+    assert trie.starts_with("app")
+    assert trie.starts_with("appl")
+    assert not trie.starts_with("banana")

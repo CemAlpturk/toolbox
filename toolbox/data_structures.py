@@ -115,3 +115,74 @@ class PriorityQueue(Generic[T]):
             T: The smallest item.
         """
         return self._data[0][1]
+
+
+class TrieNode:
+    def __init__(self):
+        self.children: dict[str, TrieNode] = {}
+        self.is_end_of_word: bool = False
+
+
+class Trie:
+    """
+    Trie (Prefix Tree) implementation for efficient string searching.
+    """
+
+    def __init__(self) -> None:
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the Trie.
+
+        Args:
+            word (str): The word to insert.
+        """
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.is_end_of_word = True
+
+    def search(self, word: str) -> bool:
+        """
+        Searches for a word in the Trie.
+
+        Args:
+            word (str): The word to search.
+
+        Returns:
+            bool: True of the word exists, False otherwise.
+        """
+        node = self._find_node(word)
+        return node.is_end_of_word if node else False
+
+    def starts_with(self, prefix: str) -> bool:
+        """
+        Checks if any word in the Trie starts with the given prefix.
+
+        Args:
+            prefix (str): The prefix to check.
+
+        Returns:
+            bool: True if any word starts with the prefix, False otherwise.
+        """
+        return self._find_node(prefix) is not None
+
+    def _find_node(self, prefix: str) -> TrieNode | None:
+        """
+        helper function to traverse the Trie up to the end of the prefix.
+
+        Args:
+            prefix (str): The prefix to traverse.
+
+        Returns:
+            TrieNode | None: The node at the end of the prefix, or None if not found.
+        """
+        node = self.root
+        for char in prefix:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
