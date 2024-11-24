@@ -4,6 +4,7 @@ from toolbox.data_structures import (
     UnionFind,
     PriorityQueue,
     Trie,
+    SegmentTree,
 )
 
 
@@ -86,3 +87,33 @@ def test_trie_operations() -> None:
     assert trie.starts_with("app")
     assert trie.starts_with("appl")
     assert not trie.starts_with("banana")
+
+
+def test_segment_tree_sum():
+    """Test SegmentTree for range sum queries and updates."""
+    data = [1, 3, 5, 7, 9, 11]
+    seg_tree = SegmentTree(data, func=lambda x, y: x + y, default=0)
+
+    # Query sum from index 1 to 5
+    assert seg_tree.query(1, 5) == 24
+
+    # Update index 3 to value 10
+    seg_tree.update(3, 10)
+
+    # Query again after the update
+    assert seg_tree.query(1, 5) == 27
+
+
+def test_segment_tree_min():
+    """Test SegmentTree for range minimum queries."""
+    data = [5, 2, 6, 3, 7, 1]
+    seg_tree = SegmentTree(data, func=min, default=float("inf"))  # type: ignore
+
+    # Query min from index 1 to 4
+    assert seg_tree.query(1, 5) == 2
+
+    # Update index 2 to value 0
+    seg_tree.update(2, 0)
+
+    # Query again after the update
+    assert seg_tree.query(1, 5) == 0

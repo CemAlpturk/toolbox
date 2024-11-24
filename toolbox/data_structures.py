@@ -2,6 +2,7 @@ from typing import (
     Any,
     Generic,
     TypeVar,
+    Callable,
 )
 import heapq
 
@@ -186,3 +187,79 @@ class Trie:
                 return None
             node = node.children[char]
         return node
+
+
+class SegmentTree(Generic[T]):
+    """
+    Segment Tree implementation for range queries and updates.
+    """
+
+    def __init__(
+        self,
+        data: list[T],
+        func: Callable[[T, T], T],
+        default: T,
+    ) -> None:
+        """
+        Initializes the Segment Tree.
+
+        Args:
+            data (list[T]): The initial array.
+            func (Callable[[T, T], T]): The function to combine elements (e.g., sum, min, max).
+            default (T): The default value for non-initialized nodes.
+        """
+        self.n = len(data)
+        self.func = func
+        self.default = default
+        self.size = 1
+        while self.size < self.n:
+            self.size <<= 1
+        self.tree = [default] * (2 * self.size)
+        self.build(data)
+
+    def build(self, data: list[T]) -> None:
+        for i in range(self.n):
+            self.tree[self.size + i] = data[i]
+        for i in range(self.size - 1, 0, -1):
+            self.tree[i] = self.func(self.tree[2 * i], self.tree[2 * i + 1])
+
+    def update(self, index: int, value: T) -> None:
+        """
+        Updates the value at the specified index.
+
+        Args:
+            index (int): The index to update.
+            value (T): The new value.
+        """
+        index += self.size
+        self.tree[index] = value
+        while index > 1:
+            index >>= 1
+            self.tree[index] = self.func(self.tree[2 * index], self.tree[2 * index + 1])
+
+    def query(self, left: int, right: int) -> T:
+        """
+        Queries the function over the range [left, right).
+
+        Args:
+            left (int): The starting index (inclusive).
+            right (int): The ending index (exclusive).
+
+        Returns:
+            T: The result of the function over the range.
+        """
+        result = self.default
+        left += self.size
+        right += self.size
+
+        while left < right:
+            if left % 2:
+                result = self.func(result, self.tree[left])
+                left += 1
+            if right % 2:
+                right -= 1
+                result = self.func(result, self.tree[right])
+            left >>= 1
+            right >>= 1
+
+        return result
