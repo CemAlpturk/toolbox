@@ -3,6 +3,7 @@ from typing import (
     Generic,
     TypeVar,
     Callable,
+    Iterator,
 )
 import heapq
 
@@ -445,3 +446,11 @@ class Graph:
             self.adj_list[v].append(u)
 
             self.weights[(v, u)] = w
+
+    def nodes(self) -> Iterator[Any]:
+        nodes: set[Any] = set()
+        for k, v in self.adj_list.items():
+            nodes.add(k)
+            nodes.update(*v)
+
+        return iter(nodes)
