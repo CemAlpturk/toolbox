@@ -117,6 +117,12 @@ class PriorityQueue(Generic[T]):
         """
         return self._data[0][1]
 
+    def __len__(self) -> int:
+        return len(self._data)
+
+    def __bool__(self) -> bool:
+        return not self.is_empty
+
 
 class TrieNode:
     def __init__(self):
