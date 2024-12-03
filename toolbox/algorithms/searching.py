@@ -153,7 +153,9 @@ def ternary_search(
 
 
 def exponential_search(
-    arr: list[T], target: T, key: Callable[[T], K] = lambda x: x
+    arr: list[T],
+    target: T,
+    key: Callable[[T], K] = lambda x: x,
 ) -> int:
     """
     Performs exponential search to find the range where the target may exists, then uses binary search.
@@ -184,3 +186,124 @@ def exponential_search(
     left = bound // 2
     right = min(bound, n - 1)
     return binary_search(arr[left : right + 1], target, key=key) + left
+
+
+def interpolation_search(arr: list[int], target: int) -> int:
+    """
+    Performs interpolation search on a uniformly distributed sorted array.
+
+    Args:
+        arr (list[int]): The sorted array to search.
+        target (int): The target value.
+
+    Returns:
+        int: The index of the target if found, else -1.
+
+    Example:
+        >>> arr = [10, 20, 30, 40, 50]
+        >>> index = interpolation_search(arr, 30)
+        >>> print(index)  # Output: 2
+    """
+    left, right = 0, len(arr) - 1
+
+    while left <= right and arr[left] <= arr[right]:
+        if arr[left] == arr[right]:
+            if arr[left] == target:
+                return left
+            else:
+                return -1
+
+        pos = left + ((target - arr[left]) * (right - left)) // (arr[right] - arr[left])
+        if pos < 0 or pos >= len(arr):
+            return -1
+
+        if arr[pos] == target:
+            return pos
+        elif arr[pos] < target:
+            left = pos + 1
+        else:
+            right = pos - 1
+
+    return -1
+
+
+def search_rotated_array(
+    arr: list[T],
+    target: T,
+    key: Callable[[T], K] = lambda x: x,
+) -> int:
+    """
+    Searches for a target value in a rotated sorted array without duplicates.
+
+    Args:
+        arr (list[T]): The rotated sorted array.
+        target (T): The target value to search for.
+        key (Callable[[T], K], optional): A function to extract a comparison key. Defaults to identity function.
+
+    Returns:
+        int: The index of the target if found, else -1.
+
+    Example:
+        >>> arr = [4, 5, 6, 7, 0, 1, 2]
+        >>> index = search_rotated_array(arr, 0)
+        >>> print(index)  # Output: 4
+    """
+    left, right = 0, len(arr) - 1
+    target_key = key(target)
+
+    while left <= right:
+        mid = (left + right) // 2
+        mid_key = key(arr[mid])
+
+        if mid_key == target_key:
+            return mid
+
+        left_key = key(arr[left])
+        right_key = key(arr[right])
+
+        if left_key <= mid_key:
+            if left_key <= target_key < mid_key:
+                right = mid - 1
+            else:
+                left = mid + 1
+
+        else:
+            # Right side is sorted
+            if mid_key < target_key <= right_key:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+    return -1
+
+
+def ternary_search_discrete(func: Callable[[int], Any], left: int, right: int) -> int:
+    """
+    Performs ternary search on a discrete unimodal function to find its minimum value.
+
+    Args:
+        func (Callable[[int], Any]): The unimodal function to minimize.
+        left (int): The left boundary of the search interval.
+        right (int): The right boundary of the search interval.
+
+    Returns:
+        int: The position of the minimum value.
+
+    Example:
+        >>> def f(x):
+        ...     return (x - 2) ** 2
+        >>> min_pos = ternary_search_discrete(f, 0, 5)
+        >>> print(min_pos)  # Output: 2
+    """
+    while left < right:
+        mid1 = left + (right - left) // 3
+        mid2 = right - (right - left) // 3
+        f1 = func(mid1)
+        f2 = func(mid2)
+
+        if f1 < f2:
+            right = mid2 - 1
+        else:
+            left = mid2 + 1
+
+    return left
