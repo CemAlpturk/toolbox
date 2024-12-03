@@ -301,3 +301,31 @@ def kruskal_mst(graph: Graph) -> list[tuple[Any, Any, float]]:
             mst_edges.append((u, v, w))
 
     return mst_edges
+
+
+def bellman_ford(graph: Graph, start: Any) -> dict[Any, float] | None:
+    """
+    Computes the shortest paths from the start node to all other nodes in a weighted graph using the Bellman-Fort algorithm.
+    Can handle graphs with negative weight edges.
+
+    Args:
+        graph (Graph): The graph represented as an adjacency list.
+        start (Any): The starting node.
+
+    Returns:
+        dict[Any, float] | None: A dictionary mapping the nodes to their shortest distance from the start node.
+        Returns None if a negative cycle is detected.
+    """
+
+    distances: dict[Any, float] = defaultdict(lambda: float("inf"))
+    distances[start] = 0.0
+
+    # Flatten the graph edges
+    edges: list[tuple[Any, Any, float]] = []
+    for u in graph.nodes():
+        for v, w in graph.adj_list.get(u, []):
+            edges.append((u, v, w))
+
+    # Relax edges repeadetly
+    # PERF: Not the most optimal way of handling this
+    num_vertices = len(list(graph.nodes()))
