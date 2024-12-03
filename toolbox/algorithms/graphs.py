@@ -250,3 +250,54 @@ def tarjan_scc(graph: Graph) -> list[list[Any]]:
             strongconnect(node)
 
     return sccs
+
+
+def kruskal_mst(graph: Graph) -> list[tuple[Any, Any, float]]:
+    """
+    Computes the Minimum Spanning Tree (MST) of a connected, undirected graph using Kruskal's algorithm.
+
+    Args:
+        graph (Graph): A weighted undirected graph.
+
+    Returns:
+        list[tuple[Any, Any, float]]: The edges in the MST.
+    """
+
+    parent: dict[Any, Any] = {}
+    rank: dict[Any, int] = {}
+
+    def find(u: Any) -> Any:
+        if parent.get(u, u) != u:
+            parent[u] = find(parent[u])
+        return parent.get(u, u)
+
+    def union(u: Any, v: Any) -> None:
+        u_root = find(u)
+        v_root = find(v)
+        if u_root == v_root:
+            return
+        if rank.get(u_root, 0) < rank.get(v_root, 0):
+            parent[u_root] = v_root
+        else:
+            parent[v_root] = u_root
+            if rank.get(u_root, 0) == rank.get(v_root, 0):
+                rank[u_root] = rank.get(u_root, 0) + 1
+
+    # Extract graph edges
+    _graph_edges: set[tuple[Any, Any, float]] = set()
+    for u in graph.nodes():
+        for v in graph.adj_list.get(u, []):
+            w = graph.weights[(u, v)]
+            _graph_edges.add((u, v, w))
+    graph_edges = list(_graph_edges)
+
+    # Sort edges by weight
+    sorted_edges = sorted(graph_edges, key=lambda edge: edge[2])
+    mst_edges: list[tuple[Any, Any, float]] = []
+
+    for u, v, w in sorted_edges:
+        if find(u) != find(v):
+            union(u, v)
+            mst_edges.append((u, v, w))
+
+    return mst_edges
