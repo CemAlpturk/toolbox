@@ -113,3 +113,40 @@ def upper_bound(arr: list[T], target: T, key: Callable[[T], K] = lambda x: x) ->
             right = mid
 
     return left
+
+
+def ternary_search(
+    func: Callable[[float], float],
+    left: float,
+    right: float,
+    absolute_precision: float = 1e-7,
+) -> float:
+    """
+    Performs ternary search on a unimodal function to find its minimum value within [left, right].
+
+    Args:
+        func (Callable[[float], float]): The unimodal functionto minimuze.
+        left (float): The left boundary of the search interval.
+        right (float): The right boundary of the search interval.
+        absolute_precisiton(float, optional): The precision of the result. Defaults to 1e-7.
+
+    Returns:
+        float: the x-coordinate of the minimum value.
+
+    Example:
+        >>> def f(x):
+        ...     return (x - 2) ** 2
+        >>> min_x = ternary_search(f, 0, 5)
+        >>> print(f"{min_x:.5f}")  # Output: 2.00000
+    """
+    while right - left > absolute_precision:
+        mid1 = left + (right - left) / 3
+        mid2 = right - (right - left) / 3
+        f1 = func(mid1)
+        f2 = func(mid2)
+        if f1 < f2:
+            right = mid2
+        else:
+            left = mid1
+
+    return (left + right) / 2
