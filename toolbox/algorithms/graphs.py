@@ -329,3 +329,19 @@ def bellman_ford(graph: Graph, start: Any) -> dict[Any, float] | None:
     # Relax edges repeadetly
     # PERF: Not the most optimal way of handling this
     num_vertices = len(list(graph.nodes()))
+    for _ in range(num_vertices - 1):
+        updated = False
+        for u, v, w in edges:
+            if distances[u] + w < distances[v]:
+                distances[v] = distances[u] + w
+                updated = True
+        if not updated:
+            break
+
+    # Check for negative weight cycles
+    for u, v, w in edges:
+        if distances[u] + w < distances[v]:
+            print("Graph contains a negative weight cycle.")
+            return None
+
+    return distances
