@@ -199,3 +199,54 @@ def topological_sort(graph: Graph) -> list[Any]:
             visit(node)
 
     return order[::-1]
+
+
+def tarjan_scc(graph: Graph) -> list[list[Any]]:
+    """
+    Finds strongly connected components in a directed graph using Tarjan's algorithm.
+
+    Args:
+        graph (Graph): The graph represented as an adjacency list.
+
+    Returns:
+        list[list[Any]]: A list of strongly connected components, each component is a list of nodes.
+    """
+
+    index = 0
+    indices: dict[Any, int] = {}
+    lowlink: dict[Any, int] = {}
+    stack: list[Any] = []
+    on_stack: set[Any] = set()
+    sccs: list[list[Any]] = []
+
+    def strongconnect(node: Any) -> None:
+        nonlocal index
+        indices[node] = index
+        lowlink[node] = index
+        index += 1
+        stack.append(node)
+        on_stack.add(node)
+
+        for neighbor in graph.adj_list.get(node, []):
+            if neighbor not in indices:
+                strongconnect(neighbor)
+                lowlink[node] = min(lowlink[node], lowlink[neighbor])
+            elif neighbor in on_stack:
+                lowlink[node] = min(lowlink[node], indices[neighbor])
+
+        # If node is a root nod, pop the stack and generate an SCC
+        if lowlink[node] == indices[node]:
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                scc.append(w)
+                if w == node:
+                    break
+            sccs.append(scc)
+
+    for node in graph.nodes():
+        if node not in indices:
+            strongconnect(node)
+
+    return sccs
