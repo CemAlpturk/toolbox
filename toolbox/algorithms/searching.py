@@ -150,3 +150,37 @@ def ternary_search(
             left = mid1
 
     return (left + right) / 2
+
+
+def exponential_search(
+    arr: list[T], target: T, key: Callable[[T], K] = lambda x: x
+) -> int:
+    """
+    Performs exponential search to find the range where the target may exists, then uses binary search.
+
+    Args:
+        arr (list[T]): The sorted array to search.
+        target (T): The target value.
+        key (Callable[[T], K], optional): A function toe extract a comparison key. Defaults to identity function.
+
+    Returns:
+        int: The index of the target if found, else -1.
+
+    Example:
+        >>> arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        >>> index = exponential_search(arr, 7)
+        >>> print(index)  # Output: 6
+    """
+    if not arr:
+        return -1
+
+    n = len(arr)
+    bound = 1
+    target_key = key(target)
+
+    while bound < n and key(arr[bound]) < target_key:
+        bound *= 2
+
+    left = bound // 2
+    right = min(bound, n - 1)
+    return binary_search(arr[left : right + 1], target, key=key) + left
