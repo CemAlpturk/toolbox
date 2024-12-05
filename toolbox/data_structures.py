@@ -451,6 +451,6 @@ class Graph:
         nodes: set[Any] = set()
         for k, v in self.adj_list.items():
             nodes.add(k)
-            nodes.update(*v)
+            nodes.update(v)
 
         return iter(nodes)
