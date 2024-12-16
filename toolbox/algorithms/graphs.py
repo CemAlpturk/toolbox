@@ -79,7 +79,7 @@ def dijkstra(graph: Graph, start: Any) -> dict[Any, float]:
     priority_queue: PriorityQueue = PriorityQueue([(0.0, start)], lambda x: x[0])
     visited: set[Any] = set()
 
-    while priority_queue:
+    while len(priority_queue) > 0:
         current_distance, current_node = priority_queue.pop()
 
         if current_node in visited:
