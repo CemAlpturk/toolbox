@@ -447,6 +447,27 @@ class Graph:
 
             self.weights[(v, u)] = w
 
+    def remove_edge(
+        self,
+        u: Any,
+        v: Any,
+        bidirectional: bool = True,
+    ) -> None:
+        """
+        Removes all edges between nodes u and v, if any exists.
+
+        Args:
+        """
+        # Clear adj list
+        self.adj_list[u] = [k for k in self.adj_list[u] if k != v]
+
+        # Clear weights
+        self.weights.pop((u, v))
+
+        if bidirectional:
+            self.adj_list[v] = [k for k in self.adj_list[v] if k != u]
+            self.weights.pop((v, u))
+
     def nodes(self) -> Iterator[Any]:
         nodes: set[Any] = set()
         for k, v in self.adj_list.items():

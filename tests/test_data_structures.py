@@ -193,3 +193,34 @@ def test_graph_adjacency_list() -> None:
         (1, 3): 1.0,
     }
     assert graph.weights == expected_weights
+
+
+def test_graph_remove_edges() -> None:
+    """Test Graph remove edge."""
+
+    graph = Graph()
+    graph.add_edge(1, 2)
+    graph.add_edge(2, 3)
+    graph.add_edge(1, 3, bidirectional=False)
+
+    graph.remove_edge(1, 2, bidirectional=False)
+
+    expected_adj_list = {
+        1: [3],
+        2: [1, 3],
+        3: [2],
+    }
+    assert graph.adj_list == expected_adj_list
+    assert (1, 2) not in graph.weights
+    assert (2, 1) in graph.weights
+
+    graph.remove_edge(2, 3)
+
+    expected_adj_list = {
+        1: [3],
+        2: [1],
+        3: [],
+    }
+    assert graph.adj_list == expected_adj_list
+    assert (2, 3) not in graph.weights
+    assert (3, 2) not in graph.weights
