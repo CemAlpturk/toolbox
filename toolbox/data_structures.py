@@ -458,6 +458,9 @@ class Graph:
 
         Args:
         """
+        if u not in self.adj_list or v not in self.adj_list:
+            return
+
         # Clear adj list
         self.adj_list[u] = [k for k in self.adj_list[u] if k != v]
 
