@@ -457,6 +457,9 @@ class Graph:
         Removes all edges between nodes u and v, if any exists.
 
         Args:
+            u (Any): First node in edge.
+            v (Any): Second node in edge.
+            bidirectional (bool, optional): If True, removes symmetric edge as well. Defaults to True.
         """
         if u not in self.adj_list or v not in self.adj_list:
             return
@@ -470,6 +473,20 @@ class Graph:
         if bidirectional:
             self.adj_list[v] = [k for k in self.adj_list[v] if k != u]
             self.weights.pop((v, u))
+
+    def remove_node(self, u: Any) -> None:
+        """
+        Removes a node u from the graph, if it exists.
+
+        Args:
+            u (Any): The node to be removed.
+        """
+        self.adj_list.pop(u)
+
+        for k, v in self.adj_list.items():
+            self.adj_list[k] = [x for x in v if x != u]
+
+        self.weights = {k: v for k, v in self.weights.items() if u not in k}
 
     def nodes(self) -> Iterator[Any]:
         nodes: set[Any] = set()

@@ -224,3 +224,30 @@ def test_graph_remove_edges() -> None:
     assert graph.adj_list == expected_adj_list
     assert (2, 3) not in graph.weights
     assert (3, 2) not in graph.weights
+
+
+def test_graph_remove_node() -> None:
+    """Test Graph remove node."""
+
+    graph = Graph()
+    graph.add_edge(1, 2)
+    graph.add_edge(2, 3)
+    graph.add_edge(1, 3, bidirectional=False)
+
+    graph.remove_node(1)
+
+    expected_adj_list = {
+        2: [3],
+        3: [2],
+    }
+
+    assert graph.adj_list == expected_adj_list
+    assert sum(x == 1 or y == 1 for x, y in graph.weights.keys()) == 0
+
+    graph.remove_node(2)
+
+    expected_adj_list = {3: []}
+    expected_weights = {}
+
+    assert graph.adj_list == expected_adj_list
+    assert graph.weights == expected_weights
