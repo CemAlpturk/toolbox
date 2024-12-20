@@ -481,7 +481,8 @@ class Graph:
         Args:
             u (Any): The node to be removed.
         """
-        self.adj_list.pop(u)
+        if u in self.adj_list:
+            self.adj_list.pop(u)
 
         for k, v in self.adj_list.items():
             self.adj_list[k] = [x for x in v if x != u]

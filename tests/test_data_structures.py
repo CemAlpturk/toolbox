@@ -251,3 +251,9 @@ def test_graph_remove_node() -> None:
 
     assert graph.adj_list == expected_adj_list
     assert graph.weights == expected_weights
+
+    # Remove node that does not exist
+    graph.remove_node(5)
+
+    assert graph.adj_list == expected_adj_list
+    assert graph.weights == expected_weights
