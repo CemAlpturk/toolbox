@@ -63,13 +63,14 @@ def dfs(graph: Graph, start: Any) -> list[Any]:
     return order
 
 
-def dijkstra(graph: Graph, start: Any) -> dict[Any, float]:
+def dijkstra(graph: Graph, start: Any, goal: Any | None = None) -> dict[Any, float]:
     """
     Computes the shortest paths from the start node to all other nodes in a weighted graph using Dijkstra's algorithm.
 
     Args:
         graph (Graph): The graph represented as an adjacency list with weights.
         start (Any): The starting node.
+        goal (Any | None): Optional goal node for early stopping.
 
     Returns:
         dict[Any, float]: A dictionary mapping nodes to their shortest distance from the start node.
@@ -81,6 +82,9 @@ def dijkstra(graph: Graph, start: Any) -> dict[Any, float]:
 
     while len(priority_queue) > 0:
         current_distance, current_node = priority_queue.pop()
+
+        if goal is not None and current_node == goal:
+            break
 
         if current_node in visited:
             continue
